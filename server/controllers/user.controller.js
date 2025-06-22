@@ -53,36 +53,50 @@ export const register= async(req,res)=>{
 }
 
 
-export const login=async (req,res)=>{
+export const login = async (req, res) => {
     try {
-        const{email,password}=req.body;
-        if(!email||!password){
+        const { email, password } = req.body;
+        if (!email || !password) {
             return res.status(400).json({
-                success:false,
-                message:"All fields are required."
-            })
-        }
-        const user= await User.findOne({email});
-        if(!user){
-            return res.status(400).json({
-                 success:false,
-                 messsage:"Incorrect email or password."
+                success: false,
+                message: "All fields are required."
             });
         }
+
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({
+                success: false,
+                message: "Incorrect email or password."
+            });
+        }
+
         const isPasswordMatch = await bcrypt.compare(password, user.password);
-        if(!isPasswordMatch){
+        if (!isPasswordMatch) {
             return res.status(400).json({
-                success:false,
-                message:"Incorrect email or password"
+                success: false,
+                message: "Incorrect email or password."
             });
         }
-        generateToken(res,user,`Welcome back ${user.name}`);
+
+        // Generate token and send success response
+        generateToken(res, user, `Welcome back ${user.name}`);
+
+        return res.status(200).json({
+            success: true,
+            message: `Welcome back ${user.name}`,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+            }
+        });
 
     } catch (error) {
         console.log(error);
         return res.status(500).json({
-            success:false,
-            message:"Failed to login."
-        })
+            success: false,
+            message: "Failed to login."
+        });
     }
-}
+};
