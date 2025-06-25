@@ -15,8 +15,8 @@ function App() {
     <Navbar/>
     {/* <HeroSection/> */}
     {/* <Loginform/> */}
-    {/* <Login/> */}
-    <InterviewScore/>
+    <Login/>
+    {/* <InterviewScore/> */}
     
    </main>
   )
